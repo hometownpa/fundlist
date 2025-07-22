@@ -5,13 +5,18 @@ FROM php:8.2-fpm-alpine
 # (e.g., libzip-dev for zip, libpng-dev for gd, icu-dev for intl)
 RUN apk update && apk add --no-cache \
     nginx \
+    # Essential build tools for compiling PHP extensions:
+    build-base \
+    autoconf \
+    g++ \
+    # Libraries needed by specific PHP extensions:
     libzip-dev \
     libpng-dev \
     libjpeg-turbo-dev \
     libwebp-dev \
     freetype-dev \
     icu-dev \
-    git # Add git if you need it for composer or other operations within the container
+    git # Keep git if composer needs it later
 
 # Install PHP extensions using docker-php-ext-install
 # For gd, you need to configure it with image processing libraries first.
@@ -48,7 +53,6 @@ RUN pecl install apcu && docker-php-ext-enable apcu
 
 # Install Composer (if your project uses Composer dependencies)
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-# Run composer install if you have a composer.json
 # RUN composer install --no-dev --optimize-autoloader
 
 # Copy Nginx configuration
