@@ -2,10 +2,8 @@
 FROM php:8.2-fpm-alpine
 
 # Install system dependencies (like nginx) and necessary libraries for PHP extensions
-# (e.g., libzip-dev for zip, libpng-dev for gd, icu-dev for intl)
 RUN apk update && apk add --no-cache \
     nginx \
-    # Essential build tools for compiling PHP extensions:
     build-base \
     autoconf \
     g++ \
@@ -16,7 +14,8 @@ RUN apk update && apk add --no-cache \
     libwebp-dev \
     freetype-dev \
     icu-dev \
-    git # Keep git if composer needs it later
+    git \
+    zlib-dev # <-- ADD THIS LINE for zlib development headers!
 
 # Install PHP extensions using docker-php-ext-install
 # For gd, you need to configure it with image processing libraries first.
