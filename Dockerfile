@@ -1,5 +1,6 @@
 # Use an official PHP-FPM image with Nginx
-FROM php:8.2-fpm-alpine # You can choose a different PHP version (e.g., 8.0-fpm-alpine, 8.3-fpm-alpine)
+# You can choose a different PHP version (e.g., 8.0-fpm-alpine, 8.3-fpm-alpine)
+FROM php:8.2-fpm-alpine
 
 # Install system dependencies and PHP extensions
 RUN apk update && apk add --no-cache \
@@ -27,13 +28,13 @@ RUN apk update && apk add --no-cache \
     php8-xmlreader \
     php8-xmlwriter \
     php8-zlib \
-    php8-fpm # Ensure php-fpm is installed for the FPM image
+    php8-fpm
 
 # Copy Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy your PHP application code
-COPY . /var/www/html/pch # Assuming your PHP files are in the root of your Git repo
+COPY . /var/www/html/pch
 WORKDIR /var/www/html/pch
 
 # Set proper permissions
