@@ -5,30 +5,30 @@ FROM php:8.2-fpm-alpine
 # Install system dependencies and PHP extensions
 RUN apk update && apk add --no-cache \
     nginx \
-    php8-pecl-apcu \
-    php8-pdo_mysql \
-    php8-mysqli \
-    php8-zip \
-    php8-gd \
-    php8-opcache \
-    php8-intl \
-    php8-mbstring \
-    php8-xml \
-    php8-json \
-    php8-session \
-    php8-ctype \
-    php8-tokenizer \
-    php8-dom \
-    php8-curl \
-    php8-filter \
-    php8-hash \
-    php8-iconv \
-    php8-openssl \
-    php8-simplexml \
-    php8-xmlreader \
-    php8-xmlwriter \
-    php8-zlib \
-    php8-fpm
+    php82-pecl-apcu \
+    php82-pdo_mysql \
+    php82-mysqli \
+    php82-zip \
+    php82-gd \
+    php82-opcache \
+    php82-intl \
+    php82-mbstring \
+    php82-xml \
+    php82-json \
+    php82-session \
+    php82-ctype \
+    php82-tokenizer \
+    php82-dom \
+    php82-curl \
+    php82-filter \
+    php82-hash \
+    php82-iconv \
+    php82-openssl \
+    php82-simplexml \
+    php82-xmlreader \
+    php82-xmlwriter \
+    php82-zlib \
+    php82-fpm # Ensure php-fpm is installed for the FPM image (this might be redundant with the base image, but harmless)
 
 # Copy Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
