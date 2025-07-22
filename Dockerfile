@@ -7,24 +7,16 @@ RUN apk update && apk add --no-cache \
     build-base \
     autoconf \
     g++ \
-    # Libraries needed by specific PHP extensions:
     libzip-dev \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    libwebp-dev \
-    freetype-dev \
     icu-dev \
     git \
-    zlib-dev # <-- ADD THIS LINE for zlib development headers!
+    zlib-dev \
+    # REMOVED GD-SPECIFIC LIBRARIES: libpng-dev, libjpeg-turbo-dev, libwebp-dev, freetype-dev
+    && rm -rf /var/cache/apk/*
 
 # Install PHP extensions using docker-php-ext-install
-# For gd, you need to configure it with image processing libraries first.
-RUN docker-php-ext-configure gd \
-    --with-freetype \
-    --with-jpeg \
-    --with-webp && \
-    docker-php-ext-install -j$(nproc) \
-    gd \
+# GD AND ITS CONFIGURATION REMOVED FOR DIAGNOSIS
+RUN docker-php-ext-install -j$(nproc) \
     pdo_mysql \
     mysqli \
     zip \
