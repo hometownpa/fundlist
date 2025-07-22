@@ -1,34 +1,55 @@
-# Use an official PHP-FPM image with Nginx
-# You can choose a different PHP version (e.g., 8.0-fpm-alpine, 8.3-fpm-alpine)
+# Use an official PHP-FPM image
 FROM php:8.2-fpm-alpine
 
-# Install system dependencies and PHP extensions
+# Install system dependencies (like nginx) and necessary libraries for PHP extensions
+# (e.g., libzip-dev for zip, libpng-dev for gd, icu-dev for intl)
 RUN apk update && apk add --no-cache \
     nginx \
-    php82-pecl-apcu \
-    php82-pdo_mysql \
-    php82-mysqli \
-    php82-zip \
-    php82-gd \
-    php82-opcache \
-    php82-intl \
-    php82-mbstring \
-    php82-xml \
-    php82-json \
-    php82-session \
-    php82-ctype \
-    php82-tokenizer \
-    php82-dom \
-    php82-curl \
-    php82-filter \
-    php82-hash \
-    php82-iconv \
-    php82-openssl \
-    php82-simplexml \
-    php82-xmlreader \
-    php82-xmlwriter \
-    php82-zlib \
-    php82-fpm # Ensure php-fpm is installed for the FPM image (this might be redundant with the base image, but harmless)
+    libzip-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    freetype-dev \
+    icu-dev \
+    git # Add git if you need it for composer or other operations within the container
+
+# Install PHP extensions using docker-php-ext-install
+# For gd, you need to configure it with image processing libraries first.
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp && \
+    docker-php-ext-install -j$(nproc) \
+    gd \
+    pdo_mysql \
+    mysqli \
+    zip \
+    opcache \
+    intl \
+    mbstring \
+    xml \
+    json \
+    session \
+    ctype \
+    tokenizer \
+    dom \
+    curl \
+    filter \
+    hash \
+    iconv \
+    openssl \
+    simplexml \
+    xmlreader \
+    xmlwriter \
+    zlib
+
+# Install APCu (it's a PECL extension, so it's installed differently)
+RUN pecl install apcu && docker-php-ext-enable apcu
+
+# Install Composer (if your project uses Composer dependencies)
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+# Run composer install if you have a composer.json
+# RUN composer install --no-dev --optimize-autoloader
 
 # Copy Nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
