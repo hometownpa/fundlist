@@ -1,0 +1,18 @@
+# PHP specific ignored files
+/vendor/
+/composer.lock
+
+# Environment variables / Credentials
+.env
+config.php
+database.php
+db_config.php
+*config*.php # More general to catch various config files
+.credentials
+*.log
+/tmp/
+
+# Database files (if any were accidentally created in your project folder)
+*.sql
+*.sqlite
+*.db
