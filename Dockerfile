@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     # Clean up apt cache to keep image size down
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions using docker-php-ext-install
+# Install PHP extensions that are NOT built-in by default
 RUN docker-php-ext-configure gd \
     --with-freetype \
     --with-jpeg \
@@ -29,23 +29,7 @@ RUN docker-php-ext-configure gd \
     mysqli \
     zip \
     opcache \
-    intl \
-    mbstring \
-    xml \
-    json \
-    session \
-    ctype \
-    tokenizer \
-    dom \
-    curl \
-    filter \
-    hash \
-    iconv \
-    openssl \
-    simplexml \
-    xmlreader \
-    xmlwriter \
-    zlib
+    intl
 
 # Install APCu (PECL extension)
 RUN pecl install apcu && docker-php-ext-enable apcu
