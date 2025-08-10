@@ -5,16 +5,16 @@ FROM php:8.2-fpm-bullseye
 # Use apt-get for Debian-based images. Note the different package names for libraries!
 RUN apt-get update && apt-get install -y \
     nginx \
-    build-essential \      # Provides compilers (gcc, g++, make) - often included or handled well on Debian
-    libzip-dev \           # For 'zip' extension
-    libpng-dev \           # For 'gd'
-    libjpeg-dev \          # For 'gd' (Debian uses libjpeg-dev, not libjpeg-turbo-dev)
-    libwebp-dev \          # For 'gd'
-    libfreetype6-dev \     # For 'gd' (Debian uses libfreetype6-dev, not freetype-dev)
-    libicu-dev \           # For 'intl'
-    git \                  # If needed for composer or other operations
-    zlib1g-dev \           # For 'zlib' and other extensions (Debian uses zlib1g-dev, not zlib-dev)
-    libxml2-dev \          # Often needed for 'xml', 'dom', 'simplexml', 'xmlreader', 'xmlwriter'
+    build-essential \
+    libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libwebp-dev \
+    libfreetype6-dev \
+    libicu-dev \
+    git \
+    zlib1g-dev \
+    libxml2-dev \
     # Clean up apt cache to keep image size down
     && rm -rf /var/lib/apt/lists/*
 
@@ -68,8 +68,13 @@ RUN chown -R www-data:www-data /var/www/html/pch
 RUN find /var/www/html/pch -type d -exec chmod 755 {} +
 RUN find /var/www/html/pch -type f -exec chmod 644 {} +
 
+# Create the startup script to run both services
+# This is a key change to ensure both Nginx and PHP-FPM start correctly
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
 # Expose port 80 for Nginx
 EXPOSE 80
 
-# Start Nginx and PHP-FPM in the foreground
-CMD ["/bin/sh", "-c", "php-fpm -F && nginx -g 'daemon off;'"]
+# Use the startup script as the container's entrypoint
+CMD ["/usr/local/bin/start.sh"]
